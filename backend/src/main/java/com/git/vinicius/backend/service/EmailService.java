@@ -6,17 +6,22 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import io.micrometer.observation.Observation.Context;
+import jakarta.mail.MessagingException;
+
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
     @Autowired
     private JavaMailSender javaMail;
-
+    @Autowired
+    private SpringTemplateEngine templateEngine;
+    @Async
     public void emailTemplate(String para, String assunto, Context variaveisEmail, String arquivosTemplate) {
-        String process = templateEngine.process(arquivosTemplate, variaveisEmail );
+        String process = templateEngine.process(arquivosTemplate, variaveisEmail);
         MimeMessage message = javaMail.createMimeMessage();
         MimeMessageHelper helper;
         try {
@@ -24,7 +29,7 @@ public class EmailService {
             helper.setTo(para);
             helper.setSubject(assunto);
             helper.setText(process, true);
-        } catch (MessagingExeption e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
         javaMail.send(message);

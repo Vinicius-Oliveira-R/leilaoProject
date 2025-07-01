@@ -9,6 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import com.git.vinicius.backend.exception.NaoEncontradoException;
 import com.git.vinicius.backend.model.Pessoa;
@@ -19,9 +20,26 @@ public class PessoaService {
     @Autowired
     private pessoaRepository pessoaRepository;
     private MessageSource messageSource;
-    public Pessoa inserir(Pessoa pessoa){
-        return pessoaRepository.save(pessoa);
-    }
+
+    @Autowired
+	private EmailService emailService;
+
+	public Pessoa inserir(Pessoa pessoa) {
+		Pessoa pessoaCadastrada = pessoaRepository.save(pessoa);
+		for (int i = 0; i < 100; i++) {
+			emailService.enviarEmailSimples(pessoaCadastrada.getEmail(), "Opa bão?", "Eu quero fazer um mago de 1.50 que lança uma única magia de fogo" + i);
+		}
+
+		enviarEmailSuceeso(pessoaCadastrada);
+
+		return pessoaCadastrada;
+	}
+
+	private void enviarEmailSuceeso(Pessoa pessoa) {
+		Context context = new Context();
+		context.setVariable("nome", pessoa.getNome());
+		emailService.emailTemplate(pessoa.getEmail(), "Cadastro Sucesso", context, "cadastroSucesso");
+	}
 
     public Pessoa alterar(Pessoa pessoa){
         Pessoa pessoaBanco = buscarPorId(pessoa.getId());

@@ -2,6 +2,7 @@ package com.git.vinicius.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,15 +31,13 @@ public class PessoaController {
     private EmailService emailService;
 
     @GetMapping
-    public ResponseEntity<List<Pessoa>> buscarTodos(Pageable pageable) {
+    public ResponseEntity<Page<Pessoa>> buscarTodos(Pageable pageable) {
         return ResponseEntity.ok(pessoaService.buscarTodos(pageable));
     }
 
-
-    public Pessoa inserir(Pessoa pessoa) {
-        Pessoa pessoaCadastrada = pessoaRepository.save(pessoa);
-        emailService.enviarEmailSimples(pessoaCadastrada.getEmail(),"cadastrada com sucesso","cadastro no sistema de leilão XXX foi feito com sucesso!");
-        return pessoaCadastrada;
+    @PostMapping
+    public ResponseEntity<Pessoa> inserir(@Valid @RequestBody Pessoa pessoa) {
+        return ResponseEntity.ok(pessoaService.inserir(pessoa));
     }
 
     @PutMapping
