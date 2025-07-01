@@ -1,6 +1,7 @@
 package com.git.vinicius.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.git.vinicius.backend.model.Pessoa;
+import com.git.vinicius.backend.repository.pessoaRepository;
+import com.git.vinicius.backend.service.EmailService;
 import com.git.vinicius.backend.service.PessoaService;
 
 import jakarta.validation.Valid;
@@ -23,15 +26,19 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
-    public ResponseEntity<List<Pessoa>> buscarTodos() {
-        return ResponseEntity.ok(pessoaService.buscarTodos());
+    public ResponseEntity<List<Pessoa>> buscarTodos(Pageable pageable) {
+        return ResponseEntity.ok(pessoaService.buscarTodos(pageable));
     }
 
-    @PostMapping
-    public ResponseEntity<Pessoa> inserir(@Valid @RequestBody Pessoa pessoa) {
-        return ResponseEntity.ok(pessoaService.inserir(pessoa));
+
+    public Pessoa inserir(Pessoa pessoa) {
+        Pessoa pessoaCadastrada = pessoaRepository.save(pessoa);
+        emailService.enviarEmailSimples(pessoaCadastrada.getEmail(),"cadastrada com sucesso","cadastro no sistema de leilão XXX foi feito com sucesso!");
+        return pessoaCadastrada;
     }
 
     @PutMapping

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Sucesso</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Cadastro Realizado com Sucesso</h1>
+    </header>
+    <main>
+        <p>Obrigado por se cadastrar! Um e-mail de confirmação foi enviado para você.</p>
+        <p> Olá, <span th:text="${nome}">Usuário</span>! Seu cadastro foi realizado com sucesso.</p>
+    </main>
+    <footer>
+        <p>&copy; 2023 Seu Site. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

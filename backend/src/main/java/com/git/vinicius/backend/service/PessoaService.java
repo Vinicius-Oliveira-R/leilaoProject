@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.git.vinicius.backend.exception.NaoEncontradoException;
@@ -34,7 +36,7 @@ public class PessoaService {
         return pessoaRepository.findById(id).orElseThrow(()->new NaoEncontradoException(messageSource.getMessage("pessoa.not-found",
         new Object[]{id}, LocaleContextHolder.getLocale() )));
     }
-    public List<Pessoa> buscarTodos(){
-        return pessoaRepository.findAll();
+    public Page<Pessoa> buscarTodos(Pageable pageable){
+        return pessoaRepository.findAll(pageable);
     }
 }
