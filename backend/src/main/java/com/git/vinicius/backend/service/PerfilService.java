@@ -13,6 +13,7 @@ import org.thymeleaf.context.Context;
 
 import com.git.vinicius.backend.exception.NaoEncontradoException;
 import com.git.vinicius.backend.model.Perfil;
+import com.git.vinicius.backend.model.PessoaPerfil;
 import com.git.vinicius.backend.repository.perfilRepository;
 
 @Service
@@ -26,7 +27,7 @@ public class PerfilService {
 
 	public Perfil inserir(Perfil Perfil) {
 		Perfil perfilCadastrada = perfilRepository.save(Perfil);
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1; i++) {
 			emailService.enviarEmailSimples(perfilCadastrada.getEmail(), "Opa bão?", "Eu quero fazer um mago de 1.50 que lança uma única magia de fogo" + i);
 		}
 
@@ -56,5 +57,13 @@ public class PerfilService {
     }
     public Page<Perfil> buscarTodos(Pageable pageable){
         return perfilRepository.findAll(pageable);
+
+    }
+    public void setPessoaPerfil(List<PessoaPerfil> pessoaPerfil){
+        for (PessoaPerfil p : pessoaPerfil){
+            p.setPessoa(this);
+         
+        }
+        this.pessoaPerfil = pessoaPerfil;
     }
 }
